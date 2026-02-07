@@ -4,20 +4,21 @@ using UnityEngine.UI;
 public class Health : MonoBehaviour
 {
     [SerializeField] private ParticleSystem _destroyParticle;
-    [SerializeField] private int healthPoints;
-    [SerializeField] private int damagePoints;
-    [SerializeField] private Text healthText;
+    [SerializeField] private int _healthPoints;
+    [SerializeField] private int _damagePoints;
+    [SerializeField] private Slider _healthSlider;
 
-    private int currentHelthPoints = 0;
+    private int _currentHelthPoints = 0;
+    private int _originHealthPoints = 0;
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Bullet")
         {
-            currentHelthPoints -= damagePoints;
+            _currentHelthPoints -= _damagePoints;
             collision.gameObject.SetActive(false);
 
-            if (currentHelthPoints <= 0)
+            if (_currentHelthPoints <= 0)
             {
                 ParticleSystem tempParticle = Instantiate(_destroyParticle, transform.position, Quaternion.identity);
                 tempParticle.Play();
@@ -28,11 +29,12 @@ public class Health : MonoBehaviour
 
     private void Awake()
     {
-        currentHelthPoints = healthPoints;
+        _currentHelthPoints = _healthPoints;
+        _originHealthPoints = _healthPoints;
     }
 
     private void Update()
     {
-        healthText.text = currentHelthPoints.ToString();
+        _healthSlider.value = _currentHelthPoints / (float)_originHealthPoints;
     }
 }
